@@ -19,17 +19,22 @@ class cita:
       return f"{self.nombre}, {self.apellido1}, {self.apellido2}, ha agendado una cita con un {self.especialidad}"
    
 def agendar():
- nombre = en_nombre.get()
- apellido1 = en_apellido1.get()
- apellido2 = en_apellido2.get()
- curp = en_curp.get()
- correo = en_correo.get()
- telefono = en_telefono.get()
- especialidad = en_especialidad.get()
+ try:
+     nombre = en_nombre.get()
+     apellido1 = en_apellido1.get()
+     apellido2 = en_apellido2.get()
+     curp = en_curp.get()
+     correo = en_correo.get()
+     telefono = en_telefono.get()
+     especialidad = en_especialidad.get()
+     if not all([nombre, apellido1,apellido2,curp,correo,telefono,especialidad]):
+        raise ValueError("Todos los campos son obligatorios")
+     cita_medica = cita(nombre, apellido1, apellido2, telefono, correo, especialidad)
+     mnsj = cita_medica.consulta()
+     messagebox.showinfo("cita agendada", mnsj)
+ except ValueError as e:
+    messagebox.showwarning("error", "todos los campos son obligatorios")
 
- cita_medica = cita(nombre, apellido1, apellido2, curp, telefono, correo, especialidad)
- mnsj = cita_medica.consulta()
- messagebox.showinfo("cita agendada", mnsj)
 
 class registrar:
     def __init__(self, nombre, apellido1, apellido2, curp, sexo, edad, telefono, cargo):
@@ -61,7 +66,7 @@ def registrar_usuario():
      messagebox.showinfo("Datos Registrados", mensaje)
 
  except ValueError as e:
-    messagebox.showerror("error, no se pudo completar el registro, porfavor intente de nuevo")
+    messagebox.showwarning("error", "no se pudo completar el registro, porfavor intente de nuevo")
 
 def mostrar_formulario(event):
     seleccion = combo.get()
@@ -111,35 +116,35 @@ def mostrar_formulario(event):
      boton_registrar.grid(row=8, column=1, padx=10, pady=10)
 
     elif seleccion == "Agendar cita":
-     tk.Label(formulario_frame,text="Nombre: ", font=("Calibri", 10), bg="gray").pack(pady=0)
+     tk.Label(formulario_frame,text="Nombre: ", font=("Calibri", 10), bg="gray").grid(pady=10, padx=10, sticky="e")
      en_nombre=tk.Entry(formulario_frame, font=("Calibri", 10))
-     en_nombre.pack(pady=8)
+     en_nombre.grid(row=0, column=1, padx=10, pady=10)
 
-     tk.Label(formulario_frame, text="Apellido paterno: ", font=("Calibri", 10), bg="gray").pack()
+     tk.Label(formulario_frame, text="Apellido paterno: ", font=("Calibri", 10), bg="gray").grid(pady=10, padx=10, sticky="e")
      en_apellido1=tk.Entry(formulario_frame, font=("Calibri", 10))
-     en_apellido1.pack(pady=8)
+     en_apellido1.grid(row=1, column=1, padx=10, pady=10)
 
-     tk.Label(formulario_frame, text="Apellido materno: ", font=("Calibri", 10), bg="gray").pack()
+     tk.Label(formulario_frame, text="Apellido materno: ", font=("Calibri", 10), bg="gray").grid(pady=10, padx=10, sticky="e")
      en_apellido2=tk.Entry(formulario_frame, font=("Calibri", 10))
-     en_apellido2.pack(pady=8)
+     en_apellido2.grid(row=2, column=1, padx=10, pady=10)
 
-     tk.Label(formulario_frame, text="CURP: ",font=("Calibri", 10), bg="gray").pack()
+     tk.Label(formulario_frame, text="CURP: ",font=("Calibri", 10), bg="gray").grid(pady=10, padx=10, sticky="e")
      en_curp=tk.Entry(formulario_frame, font=("Calibri", 10))
-     en_curp.pack(pady=8)
+     en_curp.grid(row=3, column=1, padx=10, pady=10)
 
-     tk.Label(formulario_frame, text=" Ingrese un numero telefonico:", font=("calibri", 10), bg="gray").pack()
+     tk.Label(formulario_frame, text=" Numero telefonico:", font=("calibri", 10), bg="gray").grid(pady=10, padx=10, sticky="e")
      en_telefono=tk.Entry(formulario_frame, font=("calibri", 10))
-     en_telefono.pack(pady=8)
+     en_telefono.grid(row=4, column=1, padx=10, pady=10)
 
-     tk.Label(formulario_frame, text=" Ingrese su correo:", font=("calibri", 10), bg="gray").pack()
+     tk.Label(formulario_frame, text="Correo electronico:", font=("calibri", 10), bg="gray").grid(pady=10, padx=10, sticky="e")
      en_correo=tk.Entry(formulario_frame, font=("calibri", 10))
-     en_correo.pack(pady=8)
+     en_correo.grid(row=5, column=1, padx=10, pady=10)
 
-     tk.Label(formulario_frame, text=" Ingrese el espacialista a consultar: ", font=("calibri", 10), bg="gray").pack()
+     tk.Label(formulario_frame, text=" Ingrese el espacialista a consultar: ", font=("calibri", 10), bg="gray").grid(pady=10, padx=10, sticky="e")
      en_especialidad=tk.Entry(formulario_frame, font=("calibri", 10))
-     en_especialidad.pack(pady=8)
-     
-     tk.Button(formulario_frame, text="Agendar Cita", command=agendar).pack(pady=10)
+     en_especialidad.grid(row=6, column=1, padx=10, pady=10)
+
+     tk.Button(formulario_frame, text="Agendar Cita", command=agendar).grid(row=8, column=1, pady=10, padx=10)
 
      
 
@@ -157,4 +162,3 @@ combo.bind("<<ComboboxSelected>>", mostrar_formulario)
 
 
 ventana.mainloop()
-

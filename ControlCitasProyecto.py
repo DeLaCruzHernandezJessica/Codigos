@@ -4,9 +4,9 @@ from tkinter import messagebox
 from tkinter import ttk
 ventana=tk.Tk()
 ventana.title("inicio")
-ventana.geometry("1024x640")
+ventana.geometry("660x640")
 ventana.config(bg="gray")
-letrero=tk.Label(ventana, text="Bienvenido", font=("Times New Roman", 40), bg="gray").pack(pady=20)
+letrero=tk.Label(ventana, text="Bienvenido", font=("Times New Roman", 40), bg="gray").pack(pady=8)
 
 class afiliacion:
    def __init__(self, nombre, apellido1, apellido2, curp, correo, domicilio, telefono):
@@ -74,7 +74,6 @@ def agendar():
  except ValueError as e:
     messagebox.showwarning("error", "todos los campos son obligatorios")
 
-
 class registrar:
     def __init__(self, nombre, apellido1, apellido2, curp, sexo, edad, telefono, cargo):
         self.nombre = nombre
@@ -107,7 +106,6 @@ def registrar_usuario():
      with open("usuarios_registrados.csv", "a", newline="", encoding="utf-8") as archivo:
          writer = csv.writer(archivo)
          writer.writerow([nombre, apellido1, apellido2, curp, sexo, edad, telefono, cargo])
-
 
  except ValueError as e:
     messagebox.showwarning("error", "no se pudo completar el registro, porfavor intente de nuevo")
@@ -249,19 +247,27 @@ def mostrar_formulario(event):
 
         tk.Button(formulario_frame, text="Ingresar", command=verificar_acceso).grid(row=2, column=1, pady=10)
 
-     
 def abrir_ventana_personal():
-    nueva_ventana = tk.Toplevel(ventana)
-    nueva_ventana.title("Panel del Personal")
-    nueva_ventana.geometry("400x300")
-    nueva_ventana.config(bg="lightblue")
-    tk.Label(nueva_ventana, text="Bienvenido al área del personal", font=("Calibri", 15), bg="lightblue").pack(pady=20)
-    
+    ventana2 = tk.Toplevel(ventana)
+    ventana2.title("Personal")
+    ventana2.geometry("400x300")
+    ventana2.config(bg="lightblue")
+    tk.Label(ventana2, text="Bienvenido al área del personal", font=("Calibri", 15), bg="lightblue").grid(pady=20, padx=20, sticky="e")
+    info_frame=tk.Frame(ventana2, bg="lightgray", bd=4, relief="groove")
+    info_frame.grid(pady=20, padx=20, sticky="nsew")
+    registro=tk.Button(info_frame, text=" Ver registro de personal")
+    registro.grid(row=0, column=1, padx=10, pady=10)
+    citas=tk.Button(info_frame, text="Citas agendadas")
+    citas.grid(row=1, column=1, padx=10, pady=10)
+    pacientes=tk.Button(info_frame, text="pacientes afiliados")
+    pacientes.grid(row=2, column=1, padx=10, pady=10)
 
 tk.Label(ventana, text="¿Que quieres hacer?", bg="gray", font=("Calibri", 20)).pack(pady=5)
 combo = ttk.Combobox(ventana, values=["Registrarse", "Agendar cita", "Afiliarse", "Ingresar (acceso solo a personal)"], font=("Calibri, 15"))
 combo.pack(pady=5)
 combo.current(0)
+
+
 
 formulario_frame = tk.Frame(ventana, bg="gray")
 formulario_frame.pack(pady=20)

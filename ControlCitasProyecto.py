@@ -1,4 +1,5 @@
 import tkinter as tk
+import csv
 from tkinter import messagebox
 from tkinter import ttk
 ventana=tk.Tk()
@@ -6,6 +7,38 @@ ventana.title("inicio")
 ventana.geometry("1024x640")
 ventana.config(bg="gray")
 letrero=tk.Label(ventana, text="Bienvenido", font=("Times New Roman", 40), bg="gray").pack(pady=20)
+
+class afiliacion:
+   def __init__(self, nombre, apellido1, apellido2, curp, correo, domicilio, telefono):
+      self.nombre=nombre
+      self.apellido1=apellido1
+      self.apellido2=apellido2
+      self.curp=curp
+      self.correo=correo
+      self.domicilio=domicilio
+      self.telefono=telefono
+   def afiliacion_exitosa(self):
+      return f"has sido afiliado exitosamente"
+   def num(self):
+      identificador=format(id(afiliacion), "x")
+      return f"tu numero de afiliacion es: {identificador}"
+def afiliarse():
+   try:
+      nombre= en_nombre.get()
+      apellido1=en_apellido1.get()
+      apellido2=en_apellido2.get()
+      curp=en_curp.get()
+      correo=en_correo.get()
+      domicilio=en_domicilio.get()
+      telefono=en_telefono.get()
+      if not all([nombre,apellido1,apellido2,curp,correo,domicilio,telefono]):
+         raise ValueError("Todos los campos son obligatorios")
+      afiliado=afiliacion(nombre,apellido1,apellido2,curp,correo,domicilio,telefono)
+      mensaje=afiliado.afiliacion_exitosa()
+      folio=afiliado.num()
+      messagebox.showinfo("Afilicion exitosa", f"{mensaje}\n, {folio}")
+   except ValueError as e:
+      messagebox.showwarning("error", str(e))
 
 class cita:
    def __init__(self, nombre, apellido1, apellido2, correo, telefono, especialidad):
@@ -29,9 +62,15 @@ def agendar():
      especialidad = en_especialidad.get()
      if not all([nombre, apellido1,apellido2,curp,correo,telefono,especialidad]):
         raise ValueError("Todos los campos son obligatorios")
-     cita_medica = cita(nombre, apellido1, apellido2, telefono, correo, especialidad)
+     
+     cita_medica = cita(nombre, apellido1, apellido2, correo, telefono, especialidad)
      mnsj = cita_medica.consulta()
      messagebox.showinfo("cita agendada", mnsj)
+
+     with open("citas_agendadas.csv", "a", newline="", encoding="utf-8") as archivo:
+         writer = csv.writer(archivo)
+         writer.writerow([nombre, apellido1, apellido2, curp, correo, telefono, especialidad])
+
  except ValueError as e:
     messagebox.showwarning("error", "todos los campos son obligatorios")
 
@@ -65,6 +104,11 @@ def registrar_usuario():
      mensaje = registro.datos()
      messagebox.showinfo("Datos Registrados", mensaje)
 
+     with open("usuarios_registrados.csv", "a", newline="", encoding="utf-8") as archivo:
+         writer = csv.writer(archivo)
+         writer.writerow([nombre, apellido1, apellido2, curp, sexo, edad, telefono, cargo])
+
+
  except ValueError as e:
     messagebox.showwarning("error", "no se pudo completar el registro, porfavor intente de nuevo")
 
@@ -74,7 +118,7 @@ def mostrar_formulario(event):
      widget.destroy()
 
     global en_nombre, en_apellido1, en_apellido2, en_curp, en_telefono, en_correo, en_especialidad
-    global en_sexo, valor, en_edad, en_cargo
+    global en_sexo, valor, en_edad, en_cargo, en_domicilio
 
     if seleccion == "Registrarse":
 
@@ -145,6 +189,39 @@ def mostrar_formulario(event):
      en_especialidad.grid(row=6, column=1, padx=10, pady=10)
 
      tk.Button(formulario_frame, text="Agendar Cita", command=agendar).grid(row=8, column=1, pady=10, padx=10)
+
+    elif seleccion == "Afiliarse":
+     tk.Label(formulario_frame,text="Nombre: ", font=("Calibri", 10), bg="gray").grid(pady=10, padx=10, sticky="e")
+     en_nombre=tk.Entry(formulario_frame, font=("Calibri", 10))
+     en_nombre.grid(row=0, column=1, padx=10, pady=10)
+
+     tk.Label(formulario_frame, text="Apellido paterno: ", font=("Calibri", 10), bg="gray").grid(pady=10, padx=10, sticky="e")
+     en_apellido1=tk.Entry(formulario_frame, font=("Calibri", 10))
+     en_apellido1.grid(row=1, column=1, padx=10, pady=10)
+
+     tk.Label(formulario_frame, text="Apellido materno: ", font=("Calibri", 10), bg="gray").grid(pady=10, padx=10, sticky="e")
+     en_apellido2=tk.Entry(formulario_frame, font=("Calibri", 10))
+     en_apellido2.grid(row=2, column=1, padx=10, pady=10)
+
+     tk.Label(formulario_frame, text="CURP: ",font=("Calibri", 10), bg="gray").grid(pady=10, padx=10, sticky="e")
+     en_curp=tk.Entry(formulario_frame, font=("Calibri", 10))
+     en_curp.grid(row=3, column=1, padx=10, pady=10)
+
+     tk.Label(formulario_frame, text="Correo electronico:", font=("calibri", 10), bg="gray").grid(pady=10, padx=10, sticky="e")
+     en_correo=tk.Entry(formulario_frame, font=("calibri", 10))
+     en_correo.grid(row=4, column=1, padx=10, pady=10)
+
+     tk.Label(formulario_frame, text="Domicilio:", font=("calibri", 10), bg="gray").grid(pady=10, padx=10, sticky="e")
+     en_domicilio=tk.Entry(formulario_frame, font=("calibri", 10))
+     en_domicilio.grid(row=5, column=1, padx=10, pady=10)
+
+     tk.Label(formulario_frame, text=" Numero telefonico:", font=("calibri", 10), bg="gray").grid(pady=10, padx=10, sticky="e")
+     en_telefono=tk.Entry(formulario_frame, font=("calibri", 10))
+     en_telefono.grid(row=6, column=1, padx=10, pady=10)
+
+     tk.Button(formulario_frame, text="Siguiente", command=afiliarse).grid(row=7, column=1, pady=10, padx=10)
+
+
 
      
 

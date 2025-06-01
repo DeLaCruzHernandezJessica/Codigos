@@ -112,6 +112,13 @@ def registrar_usuario():
  except ValueError as e:
     messagebox.showwarning("error", "no se pudo completar el registro, porfavor intente de nuevo")
 
+class Usuario:
+   def __init__(self, usuario="admin", contraseña="1234"):
+      self.usuario=usuario
+      self.contraseña=contraseña
+   def verificar(self, usuario, contraseña):
+      return self.usuario==usuario and self.contraseña==contraseña
+
 def mostrar_formulario(event):
     seleccion = combo.get()
     for widget in formulario_frame.winfo_children():
@@ -221,14 +228,38 @@ def mostrar_formulario(event):
 
      tk.Button(formulario_frame, text="Siguiente", command=afiliarse).grid(row=7, column=1, pady=10, padx=10)
 
+    elif seleccion == "Ingresar (acceso solo a personal)":
+        tk.Label(formulario_frame, text="Usuario:", bg="gray").grid(row=0, column=0, padx=10, pady=10, sticky="e")
+        en_usuario = tk.Entry(formulario_frame, font=("Calibri", 10))
+        en_usuario.grid(row=0, column=1, padx=10, pady=10)
 
+        tk.Label(formulario_frame, text="Contraseña:", bg="gray").grid(row=1, column=0, padx=10, pady=10, sticky="e")
+        en_contraseña = tk.Entry(formulario_frame, show="*", font=("Calibri", 10))
+        en_contraseña.grid(row=1, column=1, padx=10, pady=10)
+
+        def verificar_acceso():
+            usuario_ingresado = en_usuario.get()
+            contraseña_ingresada = en_contraseña.get()
+            admin = Usuario()
+            if admin.verificar(usuario_ingresado, contraseña_ingresada):
+                messagebox.showinfo("Acceso permitido", "Bienvenido al sistema")
+                abrir_ventana_personal()
+            else:
+                messagebox.showerror("Acceso denegado", "Usuario o contraseña incorrectos")
+
+        tk.Button(formulario_frame, text="Ingresar", command=verificar_acceso).grid(row=2, column=1, pady=10)
 
      
-
-       
+def abrir_ventana_personal():
+    nueva_ventana = tk.Toplevel(ventana)
+    nueva_ventana.title("Panel del Personal")
+    nueva_ventana.geometry("400x300")
+    nueva_ventana.config(bg="lightblue")
+    tk.Label(nueva_ventana, text="Bienvenido al área del personal", font=("Calibri", 15), bg="lightblue").pack(pady=20)
+    
 
 tk.Label(ventana, text="¿Que quieres hacer?", bg="gray", font=("Calibri", 20)).pack(pady=5)
-combo = ttk.Combobox(ventana, values=["Registrarse", "Agendar cita", "Afiliarse", "ingresar (acceso solo a personal)"], font=("Calibri, 15"))
+combo = ttk.Combobox(ventana, values=["Registrarse", "Agendar cita", "Afiliarse", "Ingresar (acceso solo a personal)"], font=("Calibri, 15"))
 combo.pack(pady=5)
 combo.current(0)
 
@@ -236,6 +267,5 @@ formulario_frame = tk.Frame(ventana, bg="gray")
 formulario_frame.pack(pady=20)
 
 combo.bind("<<ComboboxSelected>>", mostrar_formulario)
-
 
 ventana.mainloop()
